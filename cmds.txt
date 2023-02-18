@@ -1,0 +1,20 @@
+aws budgets create-budget \
+    --account-id $AWS_ACCOUNT_ID \
+    --budget file://aws/json/budget.json \
+    --notifications-with-subscribers file://aws/json/budget-notifications-with-subscribers.json
+
+aws sns subscribe \
+    --topic-arn="arn:aws:sns:eu-north-1:358924965321:billing-alarm-2" \
+    --protocol=email \
+    --notification-endpoint=thimira.lt@gmail.com
+
+aws cloudwatch put-metric-alarm --cli-input-json file://aws/json/alarm_config.json
+
+aws configure
+gp env AWS_Access_Key_ID=
+gp env AWS_Secret_Access_Key=
+aws sts
+gp env AWS_DEFAULT_REGION=eu-north-1
+aws sts get-caller-identity --query Account --output text
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text) - export aws account id as an environment variable
+env | grep AWS
